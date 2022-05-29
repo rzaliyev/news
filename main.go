@@ -55,8 +55,6 @@ func createAPIQuery(cfg *Config, query Query) string {
 
 	endPoint.RawQuery = values.Encode()
 
-	// fmt.Println(endPoint.String())
-
 	return endPoint.String()
 }
 
