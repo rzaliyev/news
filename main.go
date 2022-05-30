@@ -90,7 +90,7 @@ func showNews(response *Response) {
 	}
 
 	tmpl, err := template.New("article").Parse(
-		`[{{.PublishedAt.Format "2006-01-02 15:04"}}] {{.Title}} by {{.Author}}
+		`[{{.PublishedAt.Format "2006-01-02 15:04"}}] {{.Title}} by {{.Source.Name}}{{if .Source.ID}}/{{.Source.ID}}{{end}}
 {{.Description}}
 URL: {{.URL}}
 
