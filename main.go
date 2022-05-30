@@ -3,11 +3,12 @@ package main
 import (
 	"encoding/json"
 	"flag"
-	"fmt"
+	"html/template"
 	"io"
 	"log"
 	"net/http"
 	"net/url"
+	"os"
 )
 
 var (
@@ -85,9 +86,20 @@ func showNews(response *Response) {
 		return
 	}
 
+	tmpl, err := template.New("article").Parse(
+		`[{{.PublishedAt.Format "2006-01-02 15:04"}}] {{.Title}} by {{.Author}}
+{{.Description}}
+URL: {{.URL}}
+
+`)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	for _, article := range response.Articles {
-		fmt.Printf("[%v] %q by %s\n", article.PublishedAt.Format("2006-01-02 15:04"), article.Title, article.Author)
-		fmt.Printf("%q\n", article.Description)
-		fmt.Printf("%s\n\n", article.URL)
+		err = tmpl.Execute(os.Stdout, article)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 }
