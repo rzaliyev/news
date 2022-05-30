@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bufio"
+	"bytes"
 	"encoding/json"
 	"flag"
 	"html/template"
@@ -9,6 +11,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"os/exec"
 )
 
 var (
@@ -96,10 +99,21 @@ URL: {{.URL}}
 		log.Fatal(err)
 	}
 
+	cmd := exec.Command("/usr/bin/less")
+
+	buf := new(bytes.Buffer)
+
 	for _, article := range response.Articles {
-		err = tmpl.Execute(os.Stdout, article)
+		err = tmpl.Execute(buf, article)
 		if err != nil {
 			log.Fatal(err)
 		}
+	}
+
+	cmd.Stdin = bufio.NewReader(buf)
+	cmd.Stdout = os.Stdout
+
+	if err = cmd.Run(); err != nil {
+		log.Fatal(err)
 	}
 }
