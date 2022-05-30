@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/url"
+	"strconv"
 )
 
 type Query struct {
@@ -11,6 +12,7 @@ type Query struct {
 	Sources  string
 	Keywords string
 	Language string
+	PageSize int
 }
 
 func (q *Query) Values() (url.Values, error) {
@@ -35,6 +37,16 @@ func (q *Query) Values() (url.Values, error) {
 	if q.Language != "" {
 		values.Add("language", q.Language)
 	}
+	if q.PageSize != 20 {
+		values.Add("pageSize", strconv.Itoa(q.PageSize))
+	}
 
 	return values, nil
+}
+
+func (q *Query) Validate() error {
+	if q.PageSize < 1 && q.PageSize > 100 {
+		return fmt.Errorf("number of articles is out of range")
+	}
+	return nil
 }

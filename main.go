@@ -20,10 +20,10 @@ var (
 	keywords = flag.String("q", "", "set keywords query parameter")
 	sources  = flag.String("sources", "", "set sources query parameter")
 	language = flag.String("language", "en", "set language query parameter")
+	pageSize = flag.Int("size", 20, "set number of articles (max 100)")
 )
 
 func main() {
-
 	cfg := GetConfig()
 
 	flag.Parse()
@@ -34,6 +34,10 @@ func main() {
 		Keywords: *keywords,
 		Sources:  *sources,
 		Language: *language,
+		PageSize: *pageSize,
+	}
+	if err := query.Validate(); err != nil {
+		log.Fatal(err)
 	}
 
 	getNews(cfg, query)
