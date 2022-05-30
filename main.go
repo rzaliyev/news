@@ -93,12 +93,7 @@ func showNews(response *Response) {
 		return
 	}
 
-	tmpl, err := template.New("article").Parse(
-		`[{{.PublishedAt.Format "2006-01-02 15:04"}}] {{.Title}} by {{.Source.Name}}{{if .Source.ID}}/{{.Source.ID}}{{end}}
-{{.Description}}
-URL: {{.URL}}
-
-`)
+	tmpl, err := template.New("article").Parse("[{{.PublishedAt.Format \"2006-01-02 15:04\"}}] {{.Title}} by {{.Source.Name}}{{if .Source.ID}}/{{.Source.ID}}{{end}}\n{{if .Description}}{{.Description}}\n{{end}}URL: {{.URL}}\n\n")
 	if err != nil {
 		log.Fatal(err)
 	}
